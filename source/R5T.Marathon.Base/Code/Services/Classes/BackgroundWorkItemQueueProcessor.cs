@@ -8,9 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace R5T.Marathon
 {
-    /// <summary>
-    /// Based on QueuedHostedService from: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-2.2&tabs=visual-studio#queued-background-tasks-1
-    /// </summary>
+    // Based on QueuedHostedService from: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-2.2&tabs=visual-studio#queued-background-tasks-1
     public class BackgroundWorkItemQueueProcessor : BackgroundService
     {
         private IBackgroundWorkItemQueue BackgroundWorkItemQueue { get; }
