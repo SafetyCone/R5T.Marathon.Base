@@ -1,4 +1,6 @@
 R5T.Marathon.Base - An IBackgroundWorkItemQueue service definition base library for the Marathon project.
 
+Based on the queued background tasks implementation here: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-2.2&tabs=visual-studio#queued-background-tasks-1.
+
 Goals
 
