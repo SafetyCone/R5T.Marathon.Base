@@ -7,7 +7,7 @@ namespace R5T.Marathon
 {
     public interface IBackgroundWorkItemQueue
     {
-        void QueueBackgroundWorkItem(Func<CancellationToken, Task> workItem);
-        Task<Func<CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken);
+        void QueueBackgroundWorkItem(Func<IServiceProvider, CancellationToken, Task> workItem);
+        Task<Func<IServiceProvider, CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken);
     }
 }

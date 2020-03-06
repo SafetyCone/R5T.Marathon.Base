@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -11,12 +12,17 @@ namespace R5T.Marathon
     // Based on QueuedHostedService from: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-2.2&tabs=visual-studio#queued-background-tasks-1
     public class BackgroundWorkItemQueueProcessor : BackgroundService
     {
+        private IServiceProvider ServiceProvider { get; }
         private IBackgroundWorkItemQueue BackgroundWorkItemQueue { get; }
         private ILogger Logger { get; }
 
 
-        public BackgroundWorkItemQueueProcessor(IBackgroundWorkItemQueue backgroundWorkItemQueue, ILogger<BackgroundWorkItemQueueProcessor> logger)
+        public BackgroundWorkItemQueueProcessor(
+            IServiceProvider serviceProvider,
+            IBackgroundWorkItemQueue backgroundWorkItemQueue,
+            ILogger<BackgroundWorkItemQueueProcessor> logger)
         {
+            this.ServiceProvider = serviceProvider;
             this.BackgroundWorkItemQueue = backgroundWorkItemQueue;
             this.Logger = logger;
         }
@@ -31,7 +37,10 @@ namespace R5T.Marathon
 
                 try
                 {
-                    await workItem(cancellationToken);
+                    using (var scope = this.ServiceProvider.CreateScope())
+                    {
+                        await workItem(scope.ServiceProvider, cancellationToken);
+                    }
                 }
                 catch (Exception ex)
                 {
