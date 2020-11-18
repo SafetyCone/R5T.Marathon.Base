@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using R5T.D0049;
+
 
 namespace R5T.Marathon
 {
@@ -14,16 +16,19 @@ namespace R5T.Marathon
     {
         private IServiceProvider ServiceProvider { get; }
         private IBackgroundWorkItemQueue BackgroundWorkItemQueue { get; }
+        private IExceptionSink ExceptionSink { get; set; }
         private ILogger Logger { get; }
 
 
         public BackgroundWorkItemQueueProcessor(
             IServiceProvider serviceProvider,
             IBackgroundWorkItemQueue backgroundWorkItemQueue,
+            IExceptionSink exceptionSink,
             ILogger<BackgroundWorkItemQueueProcessor> logger)
         {
             this.ServiceProvider = serviceProvider;
             this.BackgroundWorkItemQueue = backgroundWorkItemQueue;
+            this.ExceptionSink = exceptionSink;
             this.Logger = logger;
         }
 
@@ -42,9 +47,11 @@ namespace R5T.Marathon
                         await workItem(scope.ServiceProvider, cancellationToken);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception exception)
                 {
-                    this.Logger.LogError(ex, $"Error occurred executing {nameof(workItem)}.");
+                    this.Logger.LogError(exception, $"Error occurred executing {nameof(workItem)}.");
+
+                    await this.ExceptionSink.Consume(exception);
                 }
             }
 
