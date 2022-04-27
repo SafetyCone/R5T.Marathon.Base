@@ -7,12 +7,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using R5T.D0049;
+using R5T.T0064;
 
 
 namespace R5T.Marathon
 {
     // Based on QueuedHostedService from: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-2.2&tabs=visual-studio#queued-background-tasks-1
-    public class BackgroundWorkItemQueueProcessor : BackgroundService
+    [ServiceImplementationMarker]
+    public class BackgroundWorkItemQueueProcessor : BackgroundService, IServiceImplementation
     {
         private IServiceProvider ServiceProvider { get; }
         private IBackgroundWorkItemQueue BackgroundWorkItemQueue { get; }
